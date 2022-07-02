@@ -33,7 +33,7 @@ pub fn hack_make_row(size : u64, rowind : u64)
 }
 
 
-pub fn hack_chunks(num_qubits : usize,
+pub fn hack_chunks(dim : usize,
 		   step : usize,
 ) -> () {
 
@@ -43,10 +43,8 @@ pub fn hack_chunks(num_qubits : usize,
     let now = Instant::now();
 
     if timings { println!("START hack_chunks({}, {}): {}",
-			  num_qubits, step,
+			  dim, step,
 			  seconds(now.elapsed().as_secs_f64())) ; }
-
-    let dim : usize =  1 << num_qubits ;
 
     let chunks : Vec<(u64, u64)> =
         (0..(dim as u64))

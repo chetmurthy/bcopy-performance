@@ -1,3 +1,5 @@
+use bcopy_performance::* ;
+
 fn main() {
-    println!("Hello, world!");
+    hack_chunks(20, 1000) ;
 }

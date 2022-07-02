@@ -53,23 +53,17 @@ pub fn hack_chunks(dim : usize,
         .map(|n| (n,min(n + step as u64, dim as u64)))
         .collect();
 
-    let chunked_vec : Vec<RowContents> =
-        chunks.iter()
-        .map(|(lo,hi)| {
+    let mut nnz = 0 as usize ;
+    chunks.iter()
+        .for_each(|(lo,hi)| {
             let rc : RowContents = hack_make_row(*hi - *lo, *lo) ;
-	    let sum_nnz = rc.0.len() ;
-	    let mut indices : Vec<u64> = Vec::with_capacity(sum_nnz as usize) ;
-	    let mut data : Vec<Complex64> = Vec::with_capacity(sum_nnz as usize) ;
+	    let chunk_nnz = rc.0.len() ;
+	    nnz += chunk_nnz ;
+	    let mut indices : Vec<u64> = Vec::with_capacity(chunk_nnz as usize) ;
+	    let mut data : Vec<Complex64> = Vec::with_capacity(chunk_nnz as usize) ;
 	    let mut dst_rc = (indices, data) ;
 	    append_rc(&mut dst_rc, &rc.0[..], &rc.1[..]) ;
-	    dst_rc
-/*
-	    rc
-*/
-        })
-        .collect() ;
-
-    let nnz : usize = chunked_vec.iter().map(|v| v.0.len()).sum() ;
+        }) ;
 
     if timings { println!("AFTER CHUNKS hack_chunks: nnz={} {}",
 			  number_(f64::value_from(nnz).unwrap()),

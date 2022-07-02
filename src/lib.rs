@@ -12,9 +12,17 @@ use conv::prelude::* ;
 
     pub type RowContents = (Vec<u64>, Vec<Complex64>) ;
 
-    pub fn append_rc(lhs : &mut RowContents, colv : &[u64], datav : &[Complex64]) {
+    pub fn append_rc_slot0(lhs : &mut RowContents, colv : &[u64], datav : &[Complex64]) {
 	colv.iter().for_each(|v| lhs.0.push(*v)) ;
+    }
+
+    pub fn append_rc_slot1(lhs : &mut RowContents, colv : &[u64], datav : &[Complex64]) {
 	datav.iter().for_each(|v| lhs.1.push(*v)) ;
+    }
+
+    pub fn append_rc(lhs : &mut RowContents, colv : &[u64], datav : &[Complex64]) {
+	append_rc_slot0(lhs, colv, datav);
+	append_rc_slot1(lhs, colv, datav);
     }
 
     pub fn append_rc1(lhs : &mut RowContents, colv : &[u64], datav : &[Complex64]) {

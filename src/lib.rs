@@ -57,10 +57,9 @@ pub fn hack_chunks(count : usize,
     let mut nnz = 0 as usize ;
     for i in 0..count {
         let rc : RowContents = hack_make_row(size, i as u64) ;
-	let chunk_nnz = rc.0.len() ;
-	nnz += chunk_nnz ;
-	let mut indices : Vec<u64> = Vec::with_capacity(chunk_nnz) ;
-	let mut data : Vec<Complex64> = Vec::with_capacity(chunk_nnz) ;
+	nnz += size ;
+	let mut indices : Vec<u64> = Vec::with_capacity(size) ;
+	let mut data : Vec<Complex64> = Vec::with_capacity(size) ;
 	let mut dst_rc = (indices, data) ;
 	append_rc(&mut dst_rc, &rc.0[..], &rc.1[..]) ;
     }

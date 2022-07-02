@@ -54,7 +54,7 @@ pub fn hack_chunks(dim : usize,
         .collect();
 
     let chunked_vec : Vec<RowContents> =
-        chunks.par_iter()
+        chunks.iter()
         .map(|(lo,hi)| {
             let rc : RowContents = hack_make_row(*hi - *lo, *lo) ;
 	    let sum_nnz = rc.0.len() ;
@@ -69,5 +69,9 @@ pub fn hack_chunks(dim : usize,
         })
         .collect() ;
 
-    if timings { println!("AFTER CHUNKS hack_chunks: {}", seconds(now.elapsed().as_secs_f64())) ; }
+    let nnz : usize = chunked_vec.iter().map(|v| v.0.len()).sum() ;
+
+    if timings { println!("AFTER CHUNKS hack_chunks: nnz={} {}",
+			  number_(f64::value_from(nnz).unwrap()),
+			  seconds(now.elapsed().as_secs_f64())) ; }
 }

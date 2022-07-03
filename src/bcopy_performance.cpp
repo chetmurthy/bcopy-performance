@@ -1,3 +1,4 @@
+#include <chrono>
 #include <algorithm>
 #include <complex>
 #include <vector>
@@ -33,13 +34,13 @@ void RowContents::clear() {
 uint64_t RowContents::append_via_insert(RowContents& other) {
   this->indices.insert(this->indices.end(), other.indices.begin(), other.indices.end()) ;
   this->data.insert(this->data.end(), other.data.begin(), other.data.end()) ;
-  return other.indices.size() ;
+  return other.indices.size() * (sizeof(uint64_t) + sizeof(complex64)) ;
 }
 
 uint64_t RowContents::append_via_copy(RowContents& other) {
   std::copy(other.indices.begin(), other.indices.end(), std::back_inserter(this->indices));
   std::copy(other.data.begin(), other.data.end(), std::back_inserter(this->data));
-  return other.indices.size() ;
+  return other.indices.size() * (sizeof(uint64_t) + sizeof(complex64)) ;
 }
 
 uint64_t RowContents::append_via_memcpy(RowContents& other) {
@@ -49,7 +50,7 @@ uint64_t RowContents::append_via_memcpy(RowContents& other) {
   std::memcpy((void *)&(this->data[this->data.size()]), (void *)&(other.data[0]), other.data.size() * sizeof(complex64)) ;
   this->data.resize(this->data.size() + other.data.size()) ;
   
-  return other.indices.size() ;
+  return other.indices.size() * (sizeof(uint64_t) + sizeof(complex64)) ;
 }
 
 RowContents
@@ -85,7 +86,16 @@ hack_chunks1(uint64_t count, uint64_t size) {
 
 int
 main() {
+
+  std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
   uint64_t ncopied = hack_chunks1(1<<10, 1<<22) ;
+  std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+
+  /* Getting number of milliseconds as a double. */
+  auto secs = std::chrono::duration_cast<std::chrono::seconds>(end - begin).count() ;
+
   cout << "ncopied: " << ncopied << std::endl ;
+  double bytespersec = ncopied / secs ;
+  std::cout << "persec: " << bytespersec << "bytes/sec\n";
   return(0) ;
 }

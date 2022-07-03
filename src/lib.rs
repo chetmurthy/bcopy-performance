@@ -55,13 +55,15 @@ pub fn hack_chunks(count : usize,
 			  seconds(now.elapsed().as_secs_f64())) ; }
 
     let mut nnz = 0 as usize ;
+    let rc : RowContents = hack_make_row(size, count as u64) ;
+    let mut indices : Vec<u64> = Vec::with_capacity(size) ;
+    let mut data : Vec<Complex64> = Vec::with_capacity(size) ;
+    let mut dst_rc = (indices, data) ;
     for i in 0..count {
-        let rc : RowContents = hack_make_row(size, i as u64) ;
 	nnz += size ;
-	let mut indices : Vec<u64> = Vec::with_capacity(size) ;
-	let mut data : Vec<Complex64> = Vec::with_capacity(size) ;
-	let mut dst_rc = (indices, data) ;
 	append_rc(&mut dst_rc, &rc.0[..], &rc.1[..]) ;
+	dst_rc.0.clear() ;
+	dst_rc.1.clear() ;
     }
 
     if timings { println!("AFTER CHUNKS hack_chunks: nnz={} {}",

@@ -1,1 +1,3 @@
 /target
+src/bcopy_performance
+*.o
